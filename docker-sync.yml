@@ -1,0 +1,8 @@
+version: '2'
+options:
+syncs:
+  app-unison-sync:
+    src: '.'
+    sync_strategy: 'unison'
+    sync_host_port: 10872
+    sync_excludes: ['.git']

@@ -1,0 +1,44 @@
+version: '3.7'
+services:
+  base: &base
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+      args:
+        RUBY_VERSION: '2.7.1'
+        BUNDLER_VERSION: '2.1.4'
+    image: krouter-dev:1.0.0
+    depends_on:
+      - kafka
+
+  play-receive:
+    <<: *base
+    command: ruby play/receive.rb
+      - kafka
+
+  play-work:
+    <<: *base
+    command: ruby play/work.rb
+      - kafka
+
+  play-create:
+    <<: *base
+    command: rescue play/create.rb
+      - kafka
+
+  zookeeper:
+    image: wurstmeister/zookeeper
+    ports:
+      - '2181'
+    hostname: zookeeper
+
+  kafka:
+    image: wurstmeister/kafka
+    hostname: kafka
+    ports:
+      - '9092'
+    environment:
+      KAFKA_ADVERTISED_HOST_NAME: kafka
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+    depends_on:
+      - zookeeper
