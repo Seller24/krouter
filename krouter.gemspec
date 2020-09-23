@@ -1,11 +1,10 @@
 # frozen_string_literal: true
 
 $LOAD_PATH.unshift File.expand_path('lib', __dir__)
-require 'krouter'
 
 Gem::Specification.new do |s|
   s.name         = 'krouter'
-  s.version      = Krouter::VERSION
+  s.version      = '0.0.1'
   s.summary      = 'Kafka Router'
   s.description  = 'Kafka Router — bridge between core app and microservices'
   s.authors      = ['Aslan Dukaev']
