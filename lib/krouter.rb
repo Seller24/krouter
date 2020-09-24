@@ -16,7 +16,9 @@ module Krouter
     end
 
     def call
+      p all_topics
       consumer.each_message do |message|
+        p "Received from #{message.topic}"
         params = parse(message)
         response = params[:action].call(params[:auth], params[:data])
         result = {
