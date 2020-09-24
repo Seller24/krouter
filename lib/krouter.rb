@@ -22,7 +22,8 @@ module Krouter
         result = {
           id: params[:id],
           success: response.success?,
-          data: response.value_or(response.failure)
+          data: response.value_or(response.failure),
+          _: params[:_]
         }
         deliver(result, params[:to])
       end
@@ -42,7 +43,7 @@ module Krouter
     def parse(message)
       JSON.parse(message.value, symbolize_names: true)
           .merge(routes[message.topic])
-          .slice(:id, :action, :to, :auth, :data)
+          .slice(:id, :action, :to, :auth, :data, :_)
     end
 
     def consumer
