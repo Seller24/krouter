@@ -8,9 +8,8 @@ module Action
     class Templates
       include Dry::Monads[:result]
 
-      def call(auth, data)
-        result = { auth: auth, data: data }
-        Success(result)
+      def call(value:)
+        Success(value)
       end
     end
   end
@@ -21,9 +20,8 @@ module Action
     class CreateTemplate
       include Dry::Monads[:result]
 
-      def call(auth, data)
-        result = { auth: auth, data: data }
-        Success(result)
+      def call(value:)
+        Success(value)
       end
     end
   end

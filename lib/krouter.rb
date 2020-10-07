@@ -20,13 +20,15 @@ module Krouter
       consumer.each_message do |message|
         p "Received from #{message.topic}"
         params = parse(message)
-        response = params[:action].call(params[:auth], params[:data])
+        response = params[:action].call(**params[:data])
         result = {
           id: params[:id],
           success: response.success?,
           data: response.value_or(response.failure),
           _: params[:_]
         }
+
+        p "Received from #{message.topic}"
         deliver(result, params[:to])
       end
     end
@@ -45,7 +47,7 @@ module Krouter
     def parse(message)
       JSON.parse(message.value, symbolize_names: true)
           .merge(routes[message.topic])
-          .slice(:id, :action, :to, :auth, :data, :_)
+          .slice(:id, :action, :to, :data, :_)
     end
 
     def consumer

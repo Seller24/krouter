@@ -13,17 +13,17 @@ services:
 
   play-receive:
     <<: *base
-    command: ruby play/receive.rb
+    command: ruby example/receive.rb
       - kafka
 
   play-work:
     <<: *base
-    command: ruby play/work.rb
+    command: ruby example/work.rb
       - kafka
 
   play-create:
     <<: *base
-    command: rescue play/create.rb
+    command: rescue example/create.rb
       - kafka
 
   zookeeper:
