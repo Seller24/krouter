@@ -23,19 +23,13 @@ module Krouter
         response = params[:action].call(**params[:data])
         result = {
           id: params[:id],
-          success: response.success?,
-          data: response.value_or(response.failure),
-          _: params[:_]
+          data: response,
+          help: params[:help]
         }
 
         p "Received from #{message.topic}"
         deliver(result, params[:to])
       end
-    end
-
-    def create_topics
-      topics = routes.map { |from, value| [from, value[:to]] }.flatten
-      topics.each { |topic| @kafka.create_topic(topic) }
     end
 
     def all_topics
@@ -47,7 +41,7 @@ module Krouter
     def parse(message)
       JSON.parse(message.value, symbolize_names: true)
           .merge(routes[message.topic])
-          .slice(:id, :action, :to, :data, :_)
+          .slice(:id, :action, :to, :data, :help)
     end
 
     def consumer
