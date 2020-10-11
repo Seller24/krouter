@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'json'
+require 'logger'
 require 'kafka'
 require 'dry/inflector'
 
@@ -13,12 +14,17 @@ module Krouter
       @kafka = Kafka.new(kafka_ports, client_id: domain)
       @domain = domain
       @actions = actions
+      @logger = Logger.new(STDOUT)
     end
 
     def call
-      p all_topics
+      log('Waiting Kafka 😴 10 sec')
+      sleep 10
+      log('Starting 🔥')
+      log("Topics: #{routes.map { |key, value| { from: key, to: value[:to] } }}" )
+
       consumer.each_message do |message|
-        p "Received from #{message.topic}"
+        log("Received from #{message.topic}")
         params = parse(message)
         response = params[:action].call(**params[:data])
         result = {
@@ -26,14 +32,8 @@ module Krouter
           data: response,
           help: params[:help]
         }
-
-        p "Received from #{message.topic}"
         deliver(result, params[:to])
       end
-    end
-
-    def all_topics
-      routes.map { |key, value| { from: key, to: value[:to] } }
     end
 
     private
@@ -58,6 +58,10 @@ module Krouter
 
     def routes
       @routes ||= Generate.new.call(domain: @domain, actions: @actions)
+    end
+
+    def log(message)
+      @logger.info(message)
     end
   end
 end
