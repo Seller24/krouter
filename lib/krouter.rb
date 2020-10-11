@@ -21,7 +21,8 @@ module Krouter
       log('Waiting Kafka 😴 10 sec')
       sleep 10
       log('Starting 🔥')
-      log("Topics: #{routes.map { |key, value| { from: key, to: value[:to] } }}" )
+      p 'Listen topics:'
+      puts routes.map { |key, value| "#{key} → #{value[:to]}" }
 
       consumer.each_message do |message|
         log("Received from #{message.topic}")
