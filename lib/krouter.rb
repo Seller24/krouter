@@ -18,8 +18,6 @@ module Krouter
     end
 
     def call
-      log('Waiting Kafka 😴 10 sec')
-      sleep 10
       log('Starting 🔥')
       p 'Listen topics:'
       puts routes.map { |key, value| "#{key} → #{value[:to]}" }
