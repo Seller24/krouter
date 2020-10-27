@@ -1,15 +1,10 @@
 # frozen_string_literal: true
 
-require 'dry/monads'
-require 'dry/monads/do'
-
 module Action
   module Items
     class Templates
-      include Dry::Monads[:result]
-
-      def call(value:)
-        Success(value)
+      def call(page: 0)
+        'Page number: ' + page 
       end
     end
   end
@@ -18,10 +13,8 @@ end
 module Action
   module Items
     class CreateTemplate
-      include Dry::Monads[:result]
-
-      def call(value:)
-        Success(value)
+      def call(name: 'Some Name')
+        'Created template: ' + name
       end
     end
   end

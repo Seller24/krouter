@@ -22,10 +22,10 @@ Krouter::Krouter.new(
 
 Запустить в разных окнах терминала:
 
-## 1. Запуск Krouter [work.rb](./example/work.rb)
+## 1. Запуск Krouter [worker.rb](./example/worker.rb)
 
 ```sh
-docker-compose run play-work
+docker-compose run worker
 ```
 
 [work.rb](./example/work.rb) выполняются действия:
@@ -34,20 +34,20 @@ docker-compose run play-work
 2. Задаётся общий домен `vk`
 3. Запускается роутер
 
-## 2. Генерация сообщений [create.rb](./example/create.rb)
+## 2. Генерация сообщений [creator.rb](./example/creator.rb)
 
 ```sh
-docker-compose run play-create
+docker-compose run creator
 ```
 
-[create.rb](./example/create.rb) отправляет случайные сообщения в топики:
+[create.rb](./example/creator.rb) отправляет случайные сообщения в топики:
 - `vk.items.create_template-create`
 - `vk.items.templates-get`
 
-## 3. Просмотр результата [receive.rb](./example/receive.rb)
+## 3. Просмотр результата [receiver.rb](./example/receiver.rb)
 
 ```sh
-docker-compose run play-receive
+docker-compose run receiver
 ```
 
 [receive.rb](./example/receive.rb) выводит сообщения с топиков:

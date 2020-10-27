@@ -1,9 +1,0 @@
-version: '3.7'
-services:
-  krouter:
-    volumes:
-      - krouter-unison-sync:/krouter:nocopy
-
-volumes:
-  krouter-unison-sync:
-    external: true

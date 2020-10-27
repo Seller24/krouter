@@ -10,21 +10,19 @@ services:
     image: krouter-dev:1.0.0
     depends_on:
       - kafka
+      - redis
 
-  play-receive:
+  creator:
     <<: *base
-    command: ruby example/receive.rb
-      - kafka
+    command: rescue example/creator.rb
 
-  play-work:
+  worker:
     <<: *base
-    command: ruby example/work.rb
-      - kafka
+    command: ruby example/worker.rb
 
-  play-create:
+  receiver:
     <<: *base
-    command: rescue example/create.rb
-      - kafka
+    command: ruby example/receiver.rb
 
   zookeeper:
     image: wurstmeister/zookeeper
@@ -42,3 +40,10 @@ services:
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
     depends_on:
       - zookeeper
+
+  redis:
+    image: redis:alpine
+    restart: always
+    ports:
+      - '6379:6379'
+  

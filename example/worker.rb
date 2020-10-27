@@ -12,7 +12,6 @@ create_template = Action::Items::CreateTemplate.new
 domain = 'vk'
 actions = [template, create_template]
 
-krouter = Krouter::Krouter.new(domain: domain, actions: actions)
-# krouter.create_topics
-p krouter.all_topics
-krouter.call
+sleep 20
+
+Krouter::Krouter.new(domain: domain, actions: actions).call
