@@ -18,6 +18,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'dry-inflector', '~> 0.2.0'
   s.add_dependency 'ruby-kafka', '~> 1.0.0'
   s.add_dependency 'redis', '~> 4.2.2'
+  s.add_dependency 'sentry-ruby', '~> 0.1.3'
 
   s.add_development_dependency 'bundler', '>= 2.0'
   s.add_development_dependency 'dry-monads', '~> 1.3.5'
