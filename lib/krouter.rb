@@ -7,6 +7,7 @@ require 'concurrent/map'
 require 'kafka'
 require 'redis'
 require 'dry/inflector'
+require 'sentry-ruby'
 
 require_relative 'krouter/version'
 require_relative 'krouter/generate'
@@ -15,7 +16,7 @@ EXPIRATION_SEC = 7 * 86400 # Week
 
 module Krouter
   class Krouter
-    def initialize(kafka_ports: %w[kafka:9092], domain:, actions: [])
+    def initialize(kafka_ports: %w[kafka:9092], domain: '', actions: [])
       @kafka = Kafka.new(kafka_ports, client_id: domain)
       @redis = Redis.new(host: 'redis', port: 6379)
       @domain = domain
@@ -33,9 +34,16 @@ module Krouter
         params = parse(message)
         to = params[:to]
         meta = params.slice(:id, :help)
-        data = params[:action].call(**params[:data])
-        deliver(meta, data, to)
-        log("Sended to: #{to}")
+        begin
+          data = params[:action].call(**params[:data])
+          deliver(meta, data, to)
+          log("Sended to: #{to}")
+        rescue => e
+          Sentry.with_scope do |scope|
+            scope.set_tags(from: from, to: to)
+            Sentry.capture_message(e)
+          end
+        end
       end
     end
 
