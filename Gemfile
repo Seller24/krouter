@@ -5,6 +5,7 @@ source 'https://rubygems.org'
 gem 'dry-inflector'
 gem 'ruby-kafka'
 gem 'redis'
+gem 'rack'
 gem 'sentry-ruby'
 
 group :test do
