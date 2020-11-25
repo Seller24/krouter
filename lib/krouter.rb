@@ -23,6 +23,10 @@ module Krouter
       @domain = domain
       @actions = actions
       @logger = Logger.new(STDOUT)
+
+      Sentry.init do |config|
+        config.dsn = ENV['SENTRY_DSN']
+      end
     end
 
     def call
