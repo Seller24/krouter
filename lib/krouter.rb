@@ -40,10 +40,7 @@ module Krouter
           deliver(meta, data, to)
           log("Sended to: #{to}")
         rescue => e
-          Sentry.with_scope do |scope|
-            scope.set_tags(from: from, to: to)
-            Sentry.capture_message(e)
-          end
+          Sentry.capture_exception(e, tags: {from: from, to: to})
         end
       end
     end
