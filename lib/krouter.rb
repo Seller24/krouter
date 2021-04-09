@@ -19,7 +19,7 @@ module Krouter
   class Krouter
     def initialize(kafka_ports: [ENV['KAFKA_URL']], domain: '', actions: [])
       @kafka = Kafka.new(kafka_ports, client_id: domain)
-      @redis = Redis.new(ENV['REDIS_URL'])
+      @redis = Redis.new(url: ENV['REDIS_URL'])
       @domain = domain
       @actions = actions
       @logger = Logger.new(STDOUT)
