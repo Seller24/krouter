@@ -17,9 +17,9 @@ EXPIRATION_SEC = 7 * 86400 # Week
 
 module Krouter
   class Krouter
-    def initialize(kafka_ports: %w[kafka:9092], domain: '', actions: [])
+    def initialize(kafka_ports: [ENV['KAFKA_URL']], domain: '', actions: [])
       @kafka = Kafka.new(kafka_ports, client_id: domain)
-      @redis = Redis.new(host: 'redis', port: 6379)
+      @redis = Redis.new(ENV['REDIS_URL'])
       @domain = domain
       @actions = actions
       @logger = Logger.new(STDOUT)
