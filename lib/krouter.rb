@@ -13,7 +13,7 @@ require 'sentry-ruby'
 require_relative 'krouter/version'
 require_relative 'krouter/generate'
 
-EXPIRATION_SEC = 7 * 86400 # Week
+EXPIRATION_SEC = ENV['KROUTER_REDIS_EXPIRATION'] || 3600
 
 module Krouter
   class Krouter
