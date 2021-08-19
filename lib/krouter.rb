@@ -6,20 +6,16 @@ require 'logger'
 require 'securerandom'
 require 'concurrent/map'
 require 'kafka'
-require 'redis'
 require 'dry/inflector'
 require 'sentry-ruby'
 
 require_relative 'krouter/version'
 require_relative 'krouter/generate'
 
-EXPIRATION_SEC = ENV['KROUTER_REDIS_EXPIRATION'] || 3600
-
 module Krouter
   class Krouter
     def initialize(kafka_ports: [ENV['KAFKA_URL']], domain: '', actions: [])
       @kafka = Kafka.new(kafka_ports, client_id: domain)
-      @redis = Redis.new(url: ENV['REDIS_URL'])
       @domain = domain
       @actions = actions
       @logger = Logger.new(STDOUT)
@@ -41,8 +37,8 @@ module Krouter
         meta = params.slice(:id, :help)
         begin
           data = params[:action].call(**params[:data])
-          deliver(meta, data, to)
-          log("Sended to: #{to}")
+          # deliver(meta, data, to)
+          # log("Sended to: #{to}")
         rescue => e
           Sentry.capture_exception(e, tags: {from: message.topic, to: to})
         end
@@ -66,7 +62,7 @@ module Krouter
     end
 
     def deliver(meta, data, to)
-      message = meta.merge(data: { key: create_link(data) })
+      message = meta.merge(data: data)
       @kafka.deliver_message(message.to_json, topic: to)
     end
 
@@ -76,13 +72,6 @@ module Krouter
 
     def log(message)
       @logger.info(message)
-    end
-
-    def create_link(message)
-      key = SecureRandom.uuid 
-      @redis.set(key, message.to_json)
-      @redis.expire(key, EXPIRATION_SEC)
-      key
     end
   end
 end
